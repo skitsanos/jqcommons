@@ -413,29 +413,8 @@ Date.prototype.getMondaySunday = function() {
     return [new Date(this).subtract('day', this.getDay() - 1), new Date(this).add('day', 7 - this.getDay())];
 };
 
-//jQuery Commons Framework
+
 (function($) {
-
-    jQuery.fn.getRandomNumber = function() {
-        return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
-    };
-
-    jQuery.fn.getRandomPassword = function(length) {
-        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        pass = "";
-        for (x = 0; x < length; x++) {
-            i = Math.floor(Math.random() * 62);
-            pass += chars.charAt(i);
-        }
-
-        $(this).val(pass);
-    };
-    //:got
-    $.extend($.expr[':'], {
-        got: function(el, i, m) {
-            return ($(el).html() == m[3]);
-        }
-    });
 
     //include, (c) Jan Jarfalk
     var status = {};
@@ -533,4 +512,30 @@ Date.prototype.getMondaySunday = function() {
         jQuery.fn.extend(object);
         jQuery.extend(object);
     };
+})(jQuery);
+
+
+//jQuery Commons Framework
+(function($) {
+
+    jQuery.fn.getRandomNumber = function() {
+        return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
+    };
+
+    jQuery.fn.getRandomPassword = function(length) {
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        pass = "";
+        for (x = 0; x < length; x++) {
+            i = Math.floor(Math.random() * 62);
+            pass += chars.charAt(i);
+        }
+
+        $(this).val(pass);
+    };
+    //:got
+    $.extend($.expr[':'], {
+        got: function(el, i, m) {
+            return ($(el).html() == m[3]);
+        }
+    });
 })(jQuery);

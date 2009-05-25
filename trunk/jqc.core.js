@@ -437,7 +437,7 @@ Date.prototype.getMondaySunday = function() {
         }
     });
 
-    //include
+    //include, (c) Jan Jarfalk
     var status = {};
     $.include = function(url, name, dependencies) {
         var name = name;

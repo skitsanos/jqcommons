@@ -427,7 +427,6 @@ jQuery.extend({
             dependency = callback;
             callback = null;
         }
-        url = url.replace('n', '');
         jQuery.includeStates[url] = false;
         var script = document.createElement('script');
         script.type = 'text/javascript';

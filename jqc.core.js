@@ -414,105 +414,73 @@ Date.prototype.getMondaySunday = function() {
 };
 
 
-(function($) {
-
-    //include, (c) Jan Jarfalk
-    var status = {};
-    $.include = function(url, name, dependencies) {
-        var name = name;
-        var src = url;
-        var object = {};
-        var self, arg;
-
-        function loadCSS(src, callback, self, name, arg) {
-            if (!status[src]) {
-                status[src] = 'loaded';
-                var node = document.createElement('link');
-                node.type = 'text/css';
-                node.rel = 'stylesheet';
-                node.href = src;
-                node.media = 'screen';
-                document.getElementsByTagName("head")[0].appendChild(node);
-            }
+if (jQuery.browser.mozilla || jQuery.browser.opera) {
+    document.removeEventListener("DOMContentLoaded", jQuery.ready, false);
+    document.addEventListener("DOMContentLoaded", function() { jQuery.ready(); }, false);
+}
+jQuery.event.remove(window, "load", jQuery.ready);
+jQuery.event.add(window, "load", function() { jQuery.ready(); });
+jQuery.extend({
+    includeStates: {},
+    include: function(url, callback, dependency) {
+        if (typeof callback != 'function' && !dependency) {
+            dependency = callback;
+            callback = null;
+        }
+        url = url.replace('n', '');
+        jQuery.includeStates[url] = false;
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.onload = function() {
+            jQuery.includeStates[url] = true;
             if (callback)
-                callback(self, name, arg);
-        }
-
-        function loadJS(src, callback, self, name, arg) {
-            if (!status[src]) {
-                status[src] = 'loaded';
-                $.getScript(src, function() {
-                    if (callback)
-                        callback(self, name, arg);
-                });
-            } else {
-                callback(self, name, arg);
-            }
-        }
-
-        function loadPlugin(self, name, arg) {
-            $.getScript(src, function() {
-                status[name] = 'loaded';
-                if (typeof self == 'object') {
-                    self.each(function() {
-                        if (arg.length > 0)
-                            $(this)[name].apply(self, arg);
-                        else {
-                            $(this)[name]();
-                        }
-                    });
-                } else {
-                    $[name].apply(null, arg);
-                }
-            });
-        }
-
-        object[name] = function() {
-            self = this;
-            arg = arguments;
-
-            if (!status[name]) {
-
-                status[src] = 'loading';
-
-                if (dependencies) {
-                    var css = dependencies.css || [];
-                    var js = dependencies.js || [];
-
-                    var d = css.concat(js);
-                    var lCSS = css.length;
-                    var l = d.length;
-
-                    $.each(d, function(i) {
-                        if (i + 1 < l) {
-                            if (i < lCSS)
-                                loadCSS(this);
-                            else
-                                loadJS(this);
-                        } else {
-                            if (i < lCSS)
-                                loadCSS(this, loadPlugin, self, name, arg);
-                            else
-                                loadJS(this, loadPlugin, self, name, arg);
-                        }
-                    });
-                } else {
-                    loadPlugin(self, name, arg);
-                }
-
-            } else if (status[src] == 'loaded') {
-                $.each(this, function() {
-                    $(this)[name].apply(self, arg);
-                });
-            }
-            else if (status[src] == 'loading') {
-                setTimeout(function() { object[name].apply(self, arg); }, 5);
-            }
+                callback.call(script);
         };
-        jQuery.fn.extend(object);
-        jQuery.extend(object);
-    };
-})(jQuery);
+        script.onreadystatechange = function() {
+            if (this.readyState != "complete" && this.readyState != "loaded") return;
+            jQuery.includeStates[url] = true;
+            if (callback)
+                callback.call(script);
+        };
+        script.src = url;
+        if (dependency) {
+            if (dependency.constructor != Array)
+                dependency = [dependency];
+            setTimeout(function() {
+                var valid = true;
+                $.each(dependency, function(k, v) {
+                    if (!v()) {
+                        valid = false;
+                        return false;
+                    }
+                })
+                if (valid)
+                    document.getElementsByTagName('head')[0].appendChild(script);
+                else
+                    setTimeout(arguments.callee, 10);
+            }, 10);
+        }
+        else
+            document.getElementsByTagName('head')[0].appendChild(script);
+        return function() {
+            return jQuery.includeStates[url];
+        }
+    },
+    readyOld: jQuery.ready,
+    ready: function() {
+        if (jQuery.isReady) return;
+        imReady = true;
+        $.each(jQuery.includeStates, function(url, state) {
+            if (!state)
+                return imReady = false;
+        });
+        if (imReady) {
+            jQuery.readyOld.apply(jQuery, arguments);
+        } else {
+            setTimeout(arguments.callee, 10);
+        }
+    }
+});
 
 
 //jQuery Commons Framework

@@ -482,8 +482,23 @@ jQuery.extend({
 });
 
 function iif(i, j, k) { if (i) { return j; } else { return k; } }
+/*
 function addslashes(str) {
     return (str + '').replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
+}*/
+function addslashes(str) {
+    str = str.replace(/\'/g, '\\\'');
+    str = str.replace(/\"/g, '\\"');
+    str = str.replace(/\\/g, '\\\\');
+    str = str.replace(/\0/g, '\\0');
+    return str;
+}
+function stripslashes(str) {
+    str = str.replace(/\\'/g, '\'');
+    str = str.replace(/\\"/g, '"');
+    str = str.replace(/\\\\/g, '\\');
+    str = str.replace(/\\0/g, '\0');
+    return str;
 }
 
 //jQuery Commons Framework

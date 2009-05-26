@@ -482,6 +482,9 @@ jQuery.extend({
 });
 
 function iif(i, j, k) { if (i) { return j; } else { return k; } }
+function addslashes(str) {
+    return (str + '').replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
+}
 
 //jQuery Commons Framework
 (function($) {

@@ -481,10 +481,10 @@ jQuery.extend({
     }
 });
 
+function iif(i, j, k) { if (i) { return j; } else { return k; } }
 
 //jQuery Commons Framework
 (function($) {
-
     jQuery.fn.getRandomNumber = function() {
         return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
     };

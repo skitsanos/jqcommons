@@ -488,12 +488,14 @@ function addslashes(str) {
 
 //jQuery Commons Framework
 (function($) {
-
+    $.redirect = function(url) {
+        document.location.href = url;
+    };
     $.urlParam = function(name) {
         var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(document.location.href);
         if (results == null) { return undefined; }
         else { return results[1] || 0; }
-    }
+    };
     jQuery.fn.getRandomNumber = function() {
         return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
     };
@@ -522,8 +524,8 @@ function addslashes(str) {
         });
 
         c.dialog('open');
-    }
-    
+    };
+
     //:got
     $.extend($.expr[':'], {
         got: function(el, i, m) {

@@ -488,15 +488,15 @@ function addslashes(str) {
 
 //jQuery Commons Framework
 (function($) {
-    $.fn.redirect = function(url) {
+    $.redirect = function(url) {
         document.location.href = url;
     };
-    $.fn.urlParam = function(name) {
+    $.urlParam = function(name) {
         var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(document.location.href);
         if (results == null) { return undefined; }
         else { return results[1] || 0; }
     };
-    $.fn.clickableUrls = function() {
+    $.clickableUrls = function() {
         var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
         this.each(function() {
             $(this).html(
@@ -521,7 +521,7 @@ function addslashes(str) {
         $(this).val(pass);
     };
 
-    $.fn.alert = function(title, msg) {
+    $.alert = function(title, msg) {
         var c = $('<div></div>');
         $(document).append(c);
         c.html(msg);

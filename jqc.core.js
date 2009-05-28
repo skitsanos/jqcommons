@@ -488,14 +488,24 @@ function addslashes(str) {
 
 //jQuery Commons Framework
 (function($) {
-    $.redirect = function(url) {
+    $.fn.redirect = function(url) {
         document.location.href = url;
     };
-    $.urlParam = function(name) {
+    $.fn.urlParam = function(name) {
         var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(document.location.href);
         if (results == null) { return undefined; }
         else { return results[1] || 0; }
     };
+    $.fn.clickableUrls = function() {
+        var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
+        this.each(function() {
+            $(this).html(
+                $(this).html().replace(regexp,'<a href="$1">$1</a>‘)
+            );
+        });
+        return $(this);
+    };
+
     jQuery.fn.getRandomNumber = function() {
         return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
     };
@@ -511,7 +521,7 @@ function addslashes(str) {
         $(this).val(pass);
     };
 
-    $.alert = function(title, msg) {
+    $.fn.alert = function(title, msg) {
         var c = $('<div></div>');
         $(document).append(c);
         c.html(msg);

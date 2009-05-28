@@ -508,6 +508,22 @@ function addslashes(str) {
 
         $(this).val(pass);
     };
+
+    $.alert = function(title, msg) {
+        var c = $('<div></div>');
+        $(document).append(c);
+        c.html(msg);
+        c.dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            buttons: { 'Close': function() { $(this).dialog('close'); c.remove(); } },
+            title: title
+        });
+
+        c.dialog('open');
+    }
+    
     //:got
     $.extend($.expr[':'], {
         got: function(el, i, m) {

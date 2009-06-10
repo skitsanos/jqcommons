@@ -20,7 +20,7 @@ skitsanos.utils.commands.ICommand.prototype.toString = function() { return 'skit
 skitsanos.utils.commands.AbstractCommand = function() {
     this.constructor.Implements(skitsanos.utils.commands.ICommand);
     this._eventsDispatcher = $('<div/>');
-    $(document).append(this._eventsDispatcher);
+    //$(document).append(this._eventsDispatcher);
 };
 
 skitsanos.utils.commands.AbstractCommand.prototype.execute = function() { /*not implemented */ };

@@ -1,3 +1,34 @@
+Function.prototype._Implements = function(pseudoInterface, opt_options) {
+    for (prop in pseudoInterface.prototype)
+        if (typeof pseudoInterface.prototype[prop] === "function")
+        if (typeof this.prototype[prop] != "function")
+        throw new Function.MethodNotImplemented(this.name, prop, pseudoInterface.name);
+};
+
+Function.prototype._ImplementsArray = function(interfaces, opt_options) {
+    if (interfaces instanceof Array)
+        for (item in interfaces.reverse())
+        if (typeof interfaces[item] === "function")
+        this._Implements(interfaces[item], opt_options);
+    else throw "The Array supplied contains an item that is not a Function";
+    else throw "The parameter supplied is not an Array";
+};
+
+Function.prototype.Implements = function(interfaces, opt_options) {
+    try {
+        if (interfaces instanceof Array) this._ImplementsArray(interfaces, opt_options);
+        else if (typeof interfaces === "function") this._Implements(interfaces, opt_options);
+        else throw "The parameter 'interfaces' supplied was not an Array or Function";
+    }
+    catch (e) { alert(e.toString()); }
+};
+
+Function.MethodNotImplemented = function(name, prop, iname) {
+    alert('Methood {' + prop + '} not implemented');
+};
+
+//----------
+
 String.prototype.reverse = function() {
     var s = "";
     var i = this.length;

@@ -10,17 +10,18 @@
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" media="screen" />
 
 	<script src="jqc.core.js" type="text/javascript"></script>
-	
+
 	<script src="jqc.commandqueue.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-		var cmd = new Object();
-		cmd.constructor.Implements(skitsanos.utils.commands.AbstractCommand);
+		var cmd = function() {
+			this.constructor.Implements(skitsanos.utils.commands.AbstractCommand);
+		};
+
 		cmd.prototype.execute = function() {
 			console.log('running custom command');
 		};
-		
-	
+
 		var q = new skitsanos.utils.commands.CommandQueue();
 		q.addCommand([cmd]);
 		q.execute();		

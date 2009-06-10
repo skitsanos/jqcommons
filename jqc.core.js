@@ -1,8 +1,4 @@
 Function.prototype._Implements = function(pseudoInterface, opt_options) {
-console.log(this.toString());
-    for (prop in this.prototype) {
-        console.log(prop);
-    }
     for (prop in pseudoInterface.prototype)
         if (typeof pseudoInterface.prototype[prop] === "function")
         if (typeof this.prototype[prop] != "function")

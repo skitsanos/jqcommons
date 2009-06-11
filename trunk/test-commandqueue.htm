@@ -3,33 +3,61 @@
 <head>
 	<title></title>
 
+	<script type="text/javascript" src="http://res.mywdk.com/utils/jshashtable.js"></script>
+
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
+	<!--	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
 
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" media="screen" />
+-->
+
+	<script src="jqc.core.js" type="text/javascript"></script>
 
 	<script src="events.js" type="text/javascript"></script>
-	
-	<script src="jqc.core.js" type="text/javascript"></script>
 
 	<script src="jqc.commandqueue.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
+
 		var local = {};
-		local.cmd = new skitsanos.utils.commands.AbstractCommand();
+		local.cmd = {};
+		Object.extend(local.cmd, skitsanos.utils.commands.AbstractCommand);
+
+		local.cmd2 = {};
+		Object.extend(local.cmd2, skitsanos.utils.commands.AbstractCommand);
+
+		local.cmd3 = {};
+		Object.extend(local.cmd3, skitsanos.utils.commands.AbstractCommand);
 
 		local.cmd.execute = function() {
-			console.log('running custom command');
+			//			for (prop in local.cmd)
+			//			{ console.log(prop) }
+			console.log('doing something');
+
 			local.cmd.onCommandComplete();
 		};
 
-		for (prop in local.cmd)
-		{ console.log(prop) }
+		local.cmd2.execute = function() {
+			console.log('doing something2');
+			local.cmd2.onCommandComplete();
+		};
 
-		var q = new skitsanos.utils.commands.CommandQueue();
-		q.addCommand([local.cmd]);
-		q.execute();		
+
+		var q = {};
+		Object.extend(q, skitsanos.utils.commands.CommandQueue);
+		q.addCommand([local.cmd, local.cmd2]);
+
+		q.addEventListener(skitsanos.utils.commands.Events.COMPLETE, function(args) {
+			console.log('done====');
+		});
+		q.addEventListener(skitsanos.utils.commands.Events.PROGRESS, function(args) {
+			console.log(args.type);
+		});
+
+		q.execute();
+		
+			
 	</script>
 
 </head>

@@ -14,17 +14,26 @@
 	<script src="jqc.commandqueue.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-		var cmd = function() {
-			this.constructor.Implements(skitsanos.utils.commands.AbstractCommand);
+		var local = {};
+		local.cmd = function() {
+			this.Extends(skitsanos.utils.commands.AbstractCommand);
 		};
 
-		cmd.prototype.execute = function() {
+		local.cmd.prototype.execute = function() {
 			console.log('running custom command');
 		};
 
-		var q = new skitsanos.utils.commands.CommandQueue();
-		q.addCommand([cmd]);
-		q.execute();		
+		console.info(local.cmd);
+
+		for (prop in local.cmd) {
+			console.log(prop);
+		}
+
+		//local.cmd.execute();
+
+		//		var q = new skitsanos.utils.commands.CommandQueue();
+		//		q.addCommand([local.cmd]);
+		//		q.execute();		
 	</script>
 
 </head>

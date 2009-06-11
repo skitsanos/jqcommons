@@ -27,6 +27,14 @@ Function.MethodNotImplemented = function(name, prop, iname) {
     alert('Methood {' + prop + '} not implemented');
 };
 
+Object.prototype.Extends = function(base) {
+    function Closure() { }
+    Closure.prototype = base.prototype;
+    this.prototype = new Closure();
+    this.prototype.constructor = this.constructor;
+    this.base = base;
+}
+
 //----------
 
 String.prototype.reverse = function() {

@@ -31,8 +31,6 @@
 		Object.extend(local.cmd3, skitsanos.utils.commands.AbstractCommand);
 
 		local.cmd.execute = function() {
-			//			for (prop in local.cmd)
-			//			{ console.log(prop) }
 			console.log('doing something');
 
 			local.cmd.onCommandComplete();
@@ -43,18 +41,18 @@
 			local.cmd2.onCommandComplete();
 		};
 
-
 		var q = {};
 		Object.extend(q, skitsanos.utils.commands.CommandQueue);
 		q.addCommand([local.cmd, local.cmd2]);
 
-		q.addEventListener(skitsanos.utils.commands.Events.COMPLETE, function(args) {
+		$(window).bind(skitsanos.utils.commands.Events.COMPLETE, function(e) {
 			console.log('done====');
 		});
-		q.addEventListener(skitsanos.utils.commands.Events.PROGRESS, function(args) {
-			console.log(args.type);
+		
+		$(window).bind(skitsanos.utils.commands.Events.PROGRESS, function(e) {
+			console.log(e);
 		});
-
+				
 		q.execute();
 		
 			

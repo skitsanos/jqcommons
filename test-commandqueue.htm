@@ -9,31 +9,27 @@
 
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/redmond/jquery-ui.css" type="text/css" media="screen" />
 
+	<script src="events.js" type="text/javascript"></script>
+	
 	<script src="jqc.core.js" type="text/javascript"></script>
 
 	<script src="jqc.commandqueue.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
 		var local = {};
-		local.cmd = function() {
-			this.Extends(skitsanos.utils.commands.AbstractCommand);
-		};
+		local.cmd = new skitsanos.utils.commands.AbstractCommand();
 
-		local.cmd.prototype.execute = function() {
+		local.cmd.execute = function() {
 			console.log('running custom command');
+			local.cmd.onCommandComplete();
 		};
 
-		console.info(local.cmd);
+		for (prop in local.cmd)
+		{ console.log(prop) }
 
-		for (prop in local.cmd) {
-			console.log(prop);
-		}
-
-		//local.cmd.execute();
-
-		//		var q = new skitsanos.utils.commands.CommandQueue();
-		//		q.addCommand([local.cmd]);
-		//		q.execute();		
+		var q = new skitsanos.utils.commands.CommandQueue();
+		q.addCommand([local.cmd]);
+		q.execute();		
 	</script>
 
 </head>

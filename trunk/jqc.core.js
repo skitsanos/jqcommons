@@ -294,6 +294,13 @@ Array.prototype.sortDate = function(p, d) {
     }
 };
 
+Array.prototype.remove = function(from, to) {
+    this.splice(from,
+    !to ||
+    1 + to - from + (!(to < 0 ^ from >= 0) && (to < 0 || -1) * this.length));
+    return this.length;
+};
+
 Array.prototype.exists = function(x) {
     for (var i = 0; i < this.length; i++) {
         if (this[i] == x) return true;

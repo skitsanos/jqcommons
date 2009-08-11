@@ -1,7 +1,7 @@
 var emptyFunction = function() { };
 
 var GUID = {};
-GUID.NewGuid = function() {
+GUID.newGuid = function() {
     var s = [], itoh = '0123456789ABCDEF';
 
     // Make array of random hex digits. The UUID only has 32 digits in it, but we

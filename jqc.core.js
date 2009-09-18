@@ -71,8 +71,6 @@ if (!jqCommons) {
     jqCommons = {};
 }
 
-
-
 var GUID = {};
 GUID.newGuid = function()
 {

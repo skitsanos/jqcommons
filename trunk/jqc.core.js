@@ -1,4 +1,72 @@
-var emptyFunction = function() { };
+(function() {
+    var initializing = false, fnTest = /xyz/.test(function() {
+        xyz;
+    }) ? /\b_super\b/ : /.*/;
+
+    // The base Class implementation (does nothing)
+    this.Class = function() {
+    };
+
+    // Create a new Class that inherits from this class
+    Class.extend = function(prop) {
+        var _super = this.prototype;
+
+        // Instantiate a base class (but only create the instance,
+        // don't run the init constructor)
+        initializing = true;
+        var prototype = new this();
+        initializing = false;
+
+        // Copy the properties over onto the new prototype
+        for (var name in prop) {
+            // Check if we're overwriting an existing function
+            prototype[name] = typeof prop[name] == "function" &&
+                              typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+                              (function(name, fn) {
+                                  return function() {
+                                      var tmp = this._super;
+
+                                      // Add a new ._super() method that is the same method
+                                      // but on the super-class
+                                      this._super = _super[name];
+
+                                      // The method only need to be bound temporarily, so we
+                                      // remove it when we're done executing
+                                      var ret = fn.apply(this, arguments);
+                                      this._super = tmp;
+
+                                      return ret;
+                                  };
+                              })(name, prop[name]) :
+                              prop[name];
+        }
+
+        // The dummy class constructor
+        function Class() {
+            // All construction is actually done in the init method
+            if (!initializing && this.init)
+                this.init.apply(this, arguments);
+        }
+
+        // Populate our constructed prototype object
+        Class.prototype = prototype;
+
+        // Enforce the constructor to be what we expect
+        Class.constructor = Class;
+
+        // And make this class extendable
+        Class.extend = arguments.callee;
+
+        return Class;
+    };
+})();
+
+var jqCommons;
+if (!jqCommons) {
+    jqCommons = {};
+}
+
+
 
 var GUID = {};
 GUID.newGuid = function()
@@ -7,177 +75,28 @@ GUID.newGuid = function()
     {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     }
+
     return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 
 };
 
-Object.extend = function(destination, source) {
-    for (var property in source)
-        destination[property] = source[property];
-    return destination;
-};
-
-Object.extend(Object, {
-    inspect: function(object) {
-        try {
-            if (Object.isUndefined(object)) return 'undefined';
-            if (object === null) return 'null';
-            return object.inspect ? object.inspect() : String(object);
-        } catch (e) {
-            if (e instanceof RangeError) return '...';
-            throw e;
-        }
-    },
-
-    toJSON: function(object) {
-        var type = typeof object;
-        switch (type) {
-            case 'undefined':
-            case 'function':
-            case 'unknown': return;
-            case 'boolean': return object.toString();
-        }
-
-        if (object === null) return 'null';
-        if (object.toJSON) return object.toJSON();
-        if (Object.isElement(object)) return;
-
-        var results = [];
-        for (var property in object) {
-            var value = Object.toJSON(object[property]);
-            if (!Object.isUndefined(value))
-                results.push(property.toJSON() + ': ' + value);
-        }
-
-        return '{' + results.join(', ') + '}';
-    },
-
-    toQueryString: function(object) {
-        return $H(object).toQueryString();
-    },
-
-    toHTML: function(object) {
-        return object && object.toHTML ? object.toHTML() : String.interpret(object);
-    },
-
-    keys: function(object) {
-        var keys = [];
-        for (var property in object)
-            keys.push(property);
-        return keys;
-    },
-
-    values: function(object) {
-        var values = [];
-        for (var property in object)
-            values.push(object[property]);
-        return values;
-    },
-
-    clone: function(object) {
-        return Object.extend({}, object);
-    },
-
-    isElement: function(object) {
-        return !!(object && object.nodeType == 1);
-    },
-
-    isArray: function(object) {
-        return object != null && typeof object == "object" &&
-      'splice' in object && 'join' in object;
-    },
-
-    isHash: function(object) {
-        return object instanceof Hash;
-    },
-
-    isFunction: function(object) {
-        return typeof object == "function";
-    },
-
-    isString: function(object) {
-        return typeof object == "string";
-    },
-
-    isNumber: function(object) {
-        return typeof object == "number";
-    },
-
-    isUndefined: function(object) {
-        return typeof object == "undefined";
+Function.prototype.inherits = function(parentClassOrObject) {
+    if (parentClassOrObject.constructor == Function)
+    {
+        //Normal Inheritance
+        this.prototype = new parentClassOrObject;
+        this.prototype.constructor = this;
+        this.prototype.parent = parentClassOrObject.prototype;
     }
-});
-
-function $A(iterable) {
-    if (!iterable) return [];
-    if (iterable.toArray) return iterable.toArray();
-    var length = iterable.length || 0, results = new Array(length);
-    while (length--) results[length] = iterable[length];
-    return results;
-}
-
-var Class = {
-    create: function() {
-        var parent = null, properties = $A(arguments);
-        if (Object.isFunction(properties[0]))
-            parent = properties.shift();
-
-        function klass() {
-            this.initialize.apply(this, arguments);
-        }
-
-        Object.extend(klass, Class.Methods);
-        klass.superclass = parent;
-        klass.subclasses = [];
-
-        if (parent) {
-            var subclass = function() { };
-            subclass.prototype = parent.prototype;
-            klass.prototype = new subclass;
-            parent.subclasses.push(klass);
-        }
-
-        for (var i = 0; i < properties.length; i++)
-            klass.addMethods(properties[i]);
-
-        if (!klass.prototype.initialize)
-            klass.prototype.initialize = emptyFunction;
-
-        klass.prototype.constructor = klass;
-
-        return klass;
+    else
+    {
+        //Pure Virtual Inheritance
+        this.prototype = parentClassOrObject;
+        this.prototype.constructor = this;
+        this.prototype.parent = parentClassOrObject;
     }
+    return this;
 };
-
-Class.Methods = {
-    addMethods: function(source) {
-        var ancestor = this.superclass && this.superclass.prototype;
-        var properties = Object.keys(source);
-
-        if (!Object.keys({ toString: true }).length)
-            properties.push("toString", "valueOf");
-
-        for (var i = 0, length = properties.length; i < length; i++) {
-            var property = properties[i], value = source[property];
-            if (ancestor && Object.isFunction(value) &&
-          value.argumentNames().first() == "$super") {
-                var method = value;
-                value = (function(m) {
-                    return function() { return ancestor[m].apply(this, arguments) };
-                })(property).wrap(method);
-
-                value.valueOf = method.valueOf.bind(method);
-                value.toString = method.toString.bind(method);
-            }
-            this.prototype[property] = value;
-        }
-
-        return this;
-    }
-};
-
-
-//----------
 
 String.prototype.reverse = function() {
     var s = "";
@@ -203,7 +122,9 @@ String.prototype.rtrim = function() {
 
 String.prototype.repeat = function(times) {
     var ret = '';
-    for (var i = 0; i < times; i++) { ret += this; }
+    for (var i = 0; i < times; i++) {
+        ret += this;
+    }
     return ret;
 };
 
@@ -251,10 +172,15 @@ Math.mod = function(val, mod) {
 };
 
 /** Extended Arrays */
-Array.prototype.sortNum = function() { return this.sort(function(a, b) { return a - b; }); };
+Array.prototype.sortNum = function() {
+    return this.sort(function(a, b) {
+        return a - b;
+    });
+};
 
 Array.prototype.sortDate = function(p, d) {
     var dateRE = /^(\d{2})[\/\- ](\d{2})[\/\- ](\d{4})/;
+
     function sortByMonthAsc(a, b) {
         a = a.replace(dateRE, "$3$2$1");
         b = b.replace(dateRE, "$3$2$1");
@@ -262,6 +188,7 @@ Array.prototype.sortDate = function(p, d) {
         if (a < b) return -1;
         return 0;
     }
+
     function sortByMonthDesc(a, b) {
         a = a.replace(dateRE, "$3$2$1");
         b = b.replace(dateRE, "$3$2$1");
@@ -269,6 +196,7 @@ Array.prototype.sortDate = function(p, d) {
         if (a < b) return 1;
         return 0;
     }
+
     function sortByDayAsc(a, b) {
         a = a.replace(dateRE, "$3$1$2");
         b = b.replace(dateRE, "$3$1$2");
@@ -276,6 +204,7 @@ Array.prototype.sortDate = function(p, d) {
         if (a < b) return -1;
         return 0;
     }
+
     function sortByDayDesc(a, b) {
         a = a.replace(dateRE, "$3$1$2");
         b = b.replace(dateRE, "$3$1$2");
@@ -307,8 +236,8 @@ Array.prototype.sortDate = function(p, d) {
 
 Array.prototype.remove = function(from, to) {
     this.splice(from,
-    !to ||
-    1 + to - from + (!(to < 0 ^ from >= 0) && (to < 0 || -1) * this.length));
+            !to ||
+            1 + to - from + (!(to < 0 ^ from >= 0) && (to < 0 || -1) * this.length));
     return this.length;
 };
 
@@ -356,42 +285,52 @@ Array.prototype.filter = function(fun /*, thisp*/) {
 Array.prototype.find = function(str) {
     var index = -1;
     for (var i = 0; i < this.length; i++) {
-        if (this[i] == str) { index = i; }
+        if (this[i] == str) {
+            index = i;
+        }
     }
     return index;
 };
 
 Array.prototype.append = function(arr) {
     var a = arr;
-    if (!(arr instanceof Array)) { a = [arr]; }
-    for (var i = 0; i < a.length; i++) { this.push(a[i]); }
+    if (!(arr instanceof Array)) {
+        a = [arr];
+    }
+    for (var i = 0; i < a.length; i++) {
+        this.push(a[i]);
+    }
 };
 
 if (Array.prototype.pop == null) {
     Array.prototype.pop = function() {
         var UNDEFINED;
-        if (this.length === 0) { return UNDEFINED; }
+        if (this.length === 0) {
+            return UNDEFINED;
+        }
         return this[--this.length];
     };
 }
 
 if (Array.prototype.push == null) {
     Array.prototype.push = function() {
-        for (var i = 0; i < arguments.length; ++i) { this[this.length] = arguments[i]; }
+        for (var i = 0; i < arguments.length; ++i) {
+            this[this.length] = arguments[i];
+        }
         return this.length;
     };
 }
 
 var dateFormat = function() {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
-		timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-		timezoneClip = /[^-+\dA-Z]/g,
-		pad = function(val, len) {
-		    val = String(val);
-		    len = len || 2;
-		    while (val.length < len) val = "0" + val;
-		    return val;
-		};
+            timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
+            timezoneClip = /[^-+\dA-Z]/g,
+            pad = function(val, len) {
+                val = String(val);
+                len = len || 2;
+                while (val.length < len) val = "0" + val;
+                return val;
+            };
 
     return function(date, mask, utc) {
         var dF = dateFormat;
@@ -415,50 +354,50 @@ var dateFormat = function() {
         }
 
         var _ = utc ? "getUTC" : "get",
-			d = date[_ + "Date"](),
-			D = date[_ + "Day"](),
-			m = date[_ + "Month"](),
-			y = date[_ + "FullYear"](),
-			H = date[_ + "Hours"](),
-			M = date[_ + "Minutes"](),
-			s = date[_ + "Seconds"](),
-			L = date[_ + "Milliseconds"](),
-			o = utc ? 0 : date.getTimezoneOffset(),
-			flags = {
-			    d: d,
-			    dd: pad(d),
-			    ddd: dF.i18n.dayNames[D],
-			    dddd: dF.i18n.dayNames[D + 7],
-			    m: m + 1,
-			    mm: pad(m + 1),
-			    mmm: dF.i18n.monthNames[m],
-			    mmmm: dF.i18n.monthNames[m + 12],
-			    yy: String(y).slice(2),
-			    yyyy: y,
-			    h: H % 12 || 12,
-			    hh: pad(H % 12 || 12),
-			    H: H,
-			    HH: pad(H),
-			    M: M,
-			    MM: pad(M),
-			    s: s,
-			    ss: pad(s),
-			    l: pad(L, 3),
-			    L: pad(L > 99 ? Math.round(L / 10) : L),
-			    t: H < 12 ? "a" : "p",
-			    tt: H < 12 ? "am" : "pm",
-			    T: H < 12 ? "A" : "P",
-			    TT: H < 12 ? "AM" : "PM",
-			    Z: utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
-			    o: (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
-			    S: ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
-			};
+                d = date[_ + "Date"](),
+                D = date[_ + "Day"](),
+                m = date[_ + "Month"](),
+                y = date[_ + "FullYear"](),
+                H = date[_ + "Hours"](),
+                M = date[_ + "Minutes"](),
+                s = date[_ + "Seconds"](),
+                L = date[_ + "Milliseconds"](),
+                o = utc ? 0 : date.getTimezoneOffset(),
+                flags = {
+                    d: d,
+                    dd: pad(d),
+                    ddd: dF.i18n.dayNames[D],
+                    dddd: dF.i18n.dayNames[D + 7],
+                    m: m + 1,
+                    mm: pad(m + 1),
+                    mmm: dF.i18n.monthNames[m],
+                    mmmm: dF.i18n.monthNames[m + 12],
+                    yy: String(y).slice(2),
+                    yyyy: y,
+                    h: H % 12 || 12,
+                    hh: pad(H % 12 || 12),
+                    H: H,
+                    HH: pad(H),
+                    M: M,
+                    MM: pad(M),
+                    s: s,
+                    ss: pad(s),
+                    l: pad(L, 3),
+                    L: pad(L > 99 ? Math.round(L / 10) : L),
+                    t: H < 12 ? "a" : "p",
+                    tt: H < 12 ? "am" : "pm",
+                    T: H < 12 ? "A" : "P",
+                    TT: H < 12 ? "AM" : "PM",
+                    Z: utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
+                    o: (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
+                    S: ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
+                };
 
         return mask.replace(token, function($0) {
             return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
         });
     };
-} ();
+}();
 
 // Some common format strings
 dateFormat.masks = {
@@ -479,13 +418,13 @@ dateFormat.masks = {
 // Internationalization strings
 dateFormat.i18n = {
     dayNames: [
-		"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-	],
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ],
     monthNames: [
-		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-	]
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ]
 };
 
 // For convenience...
@@ -493,7 +432,7 @@ Date.prototype.format = function(mask, utc) {
     return dateFormat(this, mask, utc);
 };
 
-Date.prototype.add = function( /**String*/unit, /**Number*/value) {
+Date.prototype.add = function(/**String*/unit, /**Number*/value) {
 
     unit = unit.replace(/s$/).toLowerCase();
 
@@ -520,7 +459,7 @@ Date.prototype.add = function( /**String*/unit, /**Number*/value) {
             this.setTime(this.getTime() + value * 1000);
             break;
         case "nanosecond":
-            // Fall Through
+        // Fall Through
         default:
             this.setTime(this.getTime() + value);
             break;
@@ -529,7 +468,7 @@ Date.prototype.add = function( /**String*/unit, /**Number*/value) {
     return this;
 };
 
-Date.prototype.subtract = function( /**String*/unit, /**Number*/value) {
+Date.prototype.subtract = function(/**String*/unit, /**Number*/value) {
 
     unit = unit.replace(/s$/).toLowerCase();
 
@@ -562,7 +501,7 @@ Date.prototype.subtract = function( /**String*/unit, /**Number*/value) {
     return this;
 };
 
-Date.prototype.truncate = function( /**String*/to) {
+Date.prototype.truncate = function(/**String*/to) {
 
     unit = unit.replace(/s$/).toLowerCase();
 
@@ -604,10 +543,15 @@ Date.prototype.getMondaySunday = function() {
 
 if (jQuery.browser.mozilla || jQuery.browser.opera) {
     document.removeEventListener("DOMContentLoaded", jQuery.ready, false);
-    document.addEventListener("DOMContentLoaded", function() { jQuery.ready(); }, false);
+    document.addEventListener("DOMContentLoaded", function() {
+        jQuery.ready();
+    }, false);
 }
 jQuery.event.remove(window, "load", jQuery.ready);
-jQuery.event.add(window, "load", function() { jQuery.ready(); });
+jQuery.event.add(window, "load", function() {
+    jQuery.ready();
+});
+
 jQuery.extend({
     includeStates: {},
     include: function(url, callback, dependency) {
@@ -669,7 +613,13 @@ jQuery.extend({
     }
 });
 
-function iif(i, j, k) { if (i) { return j; } else { return k; } }
+function iif(i, j, k) {
+    if (i) {
+        return j;
+    } else {
+        return k;
+    }
+}
 function addslashes(str) {
     return (str + '').replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
 }
@@ -681,8 +631,12 @@ function addslashes(str) {
     };
     $.urlParam = function(name) {
         var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(document.location.href);
-        if (results == null) { return undefined; }
-        else { return results[1] || 0; }
+        if (results == null) {
+            return undefined;
+        }
+        else {
+            return results[1] || 0;
+        }
     };
     $.clickableUrls = function() {
         var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
@@ -715,7 +669,10 @@ function addslashes(str) {
             autoOpen: false,
             modal: true,
             resizable: false,
-            buttons: { 'Close': function() { $(this).dialog('close'); c.remove(); } },
+            buttons: { 'Close': function() {
+                $(this).dialog('close');
+                c.remove();
+            } },
             title: title
         });
 

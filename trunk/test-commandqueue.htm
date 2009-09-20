@@ -36,11 +36,11 @@
         var q = new jqCommons.queues.CommandQueue();
         q.addCommand([cmd1, cmd2]);
 
-        $(window).bind(skitsanos.utils.commands.Events.COMPLETE, function(e) {
+        $(window).bind(jqCommons.queue.Events().COMPLETE, function(e) {
             console.log('done====');
         });
 
-        $(window).bind(skitsanos.utils.commands.Events.PROGRESS, function(e) {
+        $(window).bind(jqCommons.queue.Events().PROGRESS, function(e) {
             console.log(e);
         });
 

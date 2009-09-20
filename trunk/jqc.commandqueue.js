@@ -1,3 +1,10 @@
+/**
+ * JavaScript Command Queues
+ * @author Skitsanos
+ * @version 1.1
+ * @credits GABRIEL MONTAGNÉ, http://rojored.com/#pure-as3-commands
+ * @dependencies jquery, jshashtable
+ */
 var jqCommons;
 if (!jqCommons) {
     jqCommons = {};

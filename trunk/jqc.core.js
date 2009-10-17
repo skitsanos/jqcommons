@@ -664,6 +664,21 @@ function addslashes(str) {
 		$(this).val(pass);
 	};
 
+    $.fn.autoClear = function() {
+        return this.each(function() {
+            $(this).focus(function() {
+                if( this.value == this.defaultValue ) {
+                    this.value = "";
+                }
+            })
+            .blur(function() {
+                if( !this.value.length ) {
+                    this.value = this.defaultValue;
+                }
+            });
+        });
+    };
+
 	$.alert = function(title, msg) {
 		var c = $('<div></div>');
 		$(document).append(c);

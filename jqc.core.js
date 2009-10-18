@@ -471,6 +471,45 @@ Date.prototype.add = function(/**String*/unit, /**Number*/value) {
     return this;
 };
 
+/**
+ * Checks if the current time is on daylight saving time or not
+ * @return  true when the current time is daylight saving time and false when it is standard time
+ */
+Date.prototype.dst = function() {
+    return this.getTimezoneOffset() < this.stdTimezoneOffset();
+};
+
+Date.prototype.addGmtOffset = function(offset, ds) {
+    var d = this;
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+    if (typeof (offset) == 'string') {
+        //00:00
+        var shift = 0;
+        if (ds != undefined && ds == true)
+            shift = 1;
+        var _h = 3600000 * (Number(offset.split(':')[0]) + shift);
+        var _m = 60000 * offset.split(':')[1];
+
+        return new Date(utc + _h + _m);
+    }
+    else {
+        var shift = 0;
+        if (ds != undefined && ds == true)
+            shift = 1;
+        return new Date(utc + (3600000 * (offset + shift)));
+    }
+};
+
+Date.prototype.addGmtOffsetByMinutes = function(offset, ds) {
+    if (ds != undefined && ds == true)
+        offset += 60;
+    var d = this;
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    return new Date(utc + (60000 * offset));
+};
+
+
 Date.prototype.subtract = function(/**String*/unit, /**Number*/value) {
 
     unit = unit.replace(/s$/).toLowerCase();
@@ -762,3 +801,12 @@ function addslashes(str) {
         }
     });
 })(jQuery);
+
+function delegate(type, delegate, handler)
+{
+    return $(document).bind(type, function(event) {
+        var target = $(event.target);
+        if (target.is(delegate))
+            return handler.apply(target, arguments);
+    });
+}

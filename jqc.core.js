@@ -173,17 +173,11 @@ String.prototype.capitalize = function(){
 
 /*
 	Replaces multiple white spaces and tabs with single white space.
-	If false is passed as an argument, It will keep tabs as it is and replace only white spaces.
-	usage: "Hello		World.	".squeeze(false/true);
+	usage: "Hello		World.	".squeeze();
 */
 
-String.prototype.squeeze = function(replaceTabs = true){
-	if(replaceTabs == false || replaceTab == 0){
-		return this.replace(/(\s+)/gm," ");
-	}
-	else{
-		return this.replace(/(\t|\s+)/gm," ");
-	}
+String.prototype.squeeze = function(){
+	return this.replace(/(\t|\s+)/gm," ");
 };
 
 

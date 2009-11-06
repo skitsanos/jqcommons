@@ -157,6 +157,38 @@ String.prototype.stripTags = function() {
     return this.replace(/<([^>]+)>/g, '');
 };
 
+
+/****************************************************** String methods added by Ashit ***********************************/
+/*
+	Replaces first letter of the word with Uppercase and rest all with Lowercase.
+	usage: "heLLo woRLD".capitalize();
+*/
+
+String.prototype.capitalize = function(){
+    return this.replace(/\w+/g, function(a){
+        return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
+    });
+};
+
+
+/*
+	Replaces multiple white spaces and tabs with single white space.
+	If false is passed as an argument, It will keep tabs as it is and replace only white spaces.
+	usage: "Hello		World.	".squeeze(false/true);
+*/
+
+String.prototype.squeeze = function(replaceTabs = true){
+	if(replaceTabs == false || replaceTab == 0){
+		return this.replace(/(\s+)/gm," ");
+	}
+	else{
+		return this.replace(/(\t|\s+)/gm," ");
+	}
+};
+
+
+/************************************************************************************************************************/
+
 Number.max = function(a, b) {
     return a < b ? b : a;
 };

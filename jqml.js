@@ -14,12 +14,44 @@ jqml.ui.box.prototype = new AMLElement;
 jqml.ui.box.prototype.style = null;
 jqml.ui.box.prototype['class'] = null;
 jqml.ui.box.prototype.$getTagOpen = function() {
-    return '<div xtype="jqml-box"' + iif(this.getAttribute('style') != null, ' style="' + this.getAttribute('style') + '"', '') + ' class="ui-widget ui-widget-content ui-corner-all '+ iif(this.getAttribute('class') != null, this.getAttribute('class'), '') + '">';
+    return '<div xtype="jqml-box"' + iif(this.getAttribute('style') != null, ' style="' + this.getAttribute('style') + '"', '') + ' class="ui-widget ui-widget-content ui-corner-all ' + iif(this.getAttribute('class') != null, this.getAttribute('class'), '') + '">';
 };
 jqml.ui.box.prototype.$getTagClose = function() {
     return '</div>';
 };
 jqml.namespace.setElement('box', jqml.ui.box);
+/**
+ * RoundedBox
+ */
+jqml.ui.roundedbox = function() {
+};
+jqml.ui.roundedbox.prototype = new AMLElement;
+jqml.ui.roundedbox.prototype.style = 'width:200; border:none; border-collapse: collapse;';
+jqml.ui.roundedbox.prototype['class'] = null;
+jqml.ui.roundedbox.prototype.$getTagOpen = function() {
+    var _ret = '<table cellspacing="0" xtype="jqml-roundedbox"' + iif(this.getAttribute('style') != null, ' style="' + this.getAttribute('style') + '"', '') + '>' +
+               '<tr>' +
+               '<td style="height:15px;width:15px;	background-image: url(http://groups.google.com/groups/roundedcorners?c=FF00AA&amp;w=18&amp;h=19&amp;a=tl);background-repeat:no-repeat;background-position:top left;">&nbsp;</td>' +
+               '<td style="background-color:#FF00AA"></td>' +
+               '<td style="height:15px;width:15px;	background-image: url(http://groups.google.com/groups/roundedcorners?c=FF00AA&amp;w=18&amp;h=19&amp;a=tr);background-repeat:no-repeat;background-position:top right;"></td>' +
+               '</tr>' +
+               '<tr>' +
+               '<td style="background-color:#FF00AA">&nbsp;</td>' +
+               '<td style="background-color:#FF00AA;color: #ffffff;">'
+    return _ret;
+};
+jqml.ui.roundedbox.prototype.$getTagClose = function() {
+    var _ret = '</td><td style="background-color:#FF00AA">&nbsp;</td></tr>' +
+               '<tr>' +
+               '<td style="height:15px;width:15px;	background-image: url(http://groups.google.com/groups/roundedcorners?c=FF00AA&amp;w=18&amp;h=19&amp;a=bl);background-repeat:no-repeat;background-position:bottom left;">&nbsp;</td>' +
+               '<td style="background-color:#FF00AA">&nbsp;</td>' +
+               '<td style="height:15px;width:15px;	background-image: url(http://groups.google.com/groups/roundedcorners?c=FF00AA&amp;w=18&amp;h=19&amp;a=br);background-repeat:no-repeat;background-position:bottom right;">&nbsp;</td>' +
+               '</tr>' +
+               '</table>';
+    return _ret;
+};
+jqml.namespace.setElement('roundedbox', jqml.ui.roundedbox);
+
 /**
  * Label
  */

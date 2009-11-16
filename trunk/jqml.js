@@ -1,3 +1,8 @@
+/**
+ * jqml - jQuery Markup Language
+ * @author Skitsanos (http://skitsanos.com, twitter: http://twitter.com/skitsanos)
+ * @version 1.0
+ */
 var jqml = {};
 jqml.version = '1.0';
 
@@ -75,9 +80,9 @@ jqml.ui.button = function() {
 jqml.ui.button.prototype = new AMLElement;
 jqml.ui.button.prototype.icon = 'ui-icon-circle-plus';
 jqml.ui.button.prototype.$getTagOpen = function() {
-    if (this.icon != '')
+    if (this.attributes.icon != undefined)
     {
-        return '<a xtype="jqml-button" href="#" class="fg-button ui-state-default fg-button-icon-left ui-corner-all"><span class="ui-icon ' + this.icon + '"></span>' + this.getAttribute('text');
+        return '<a xtype="jqml-button" href="#" class="fg-button ui-state-default fg-button-icon-left ui-corner-all"><span class="ui-icon ' + this.getAttribute('icon') + '"></span>' + this.getAttribute('text');
     }
     else
     {
@@ -87,32 +92,162 @@ jqml.ui.button.prototype.$getTagOpen = function() {
 jqml.ui.button.prototype.$getTagClose = function() {
     return '</a>';
 };
-jqml.ui.button.handlers = {
-    "DOMNodeInsertedIntoDocument":    function(oEvent) {
-        //console.log('inserted');
-    },
-    "DOMNodeRemovedFromDocument":    function(oEvent) {
-        //console.log('removed');
+jqml.namespace.setElement('button', jqml.ui.button);
+/**
+ * Window
+ */
+jqml.ui.window = function() {
+};
+jqml.ui.window.prototype = new AMLElement;
+jqml.ui.window.prototype.title = '';
+jqml.ui.window.prototype.$getTagOpen = function() {
+    return '<div xtype="jqml-window">';
+};
+jqml.ui.window.prototype.$getTagClose = function() {
+    return '</div>';
+};
+jqml.ui.window.handlers = {
+    "DOMNodeInsertedIntoDocument":    function(e) {
+        var id = iif(this.attributes.id != undefined, this.attributes.id, this.uniqueID);
+        $('#' + id).dialog({
+            autoOpen: iif(this.getAttribute('autoOpen')==undefined, this.autoOpen, this.getAttribute('autoOpen')),
+            modal: iif(this.attributes.modal == null, this.modal, this.attributes.modal),
+            resizable: iif(this.attributes.resizable == null, this.resizable, this.attributes.resizable),
+            title: iif(this.attributes.title == null, this.title, this.attributes.title)
+        });       
     }
 };
-jqml.namespace.setElement('button', jqml.ui.button);
+jqml.namespace.setElement('window', jqml.ui.window);
 /**
  * Tab Panel
  */
-jqml.ui.tabPanel = function() {
+jqml.ui.tabs = function() {
 };
-jqml.ui.tabPanel.prototype = new AMLElement;
-jqml.ui.tabPanel.prototype.selectedIndex = -1;
-jqml.ui.tabPanel.prototype.selectedTab = null;
-jqml.ui.tabPanel.prototype.selectedPanel = null;
-jqml.ui.tabPanel.prototype.$getTagOpen = function() {
-    return '<div xtype="jqml-tabpanel">';
+jqml.ui.tabs.prototype = new AMLElement;
+jqml.ui.tabs.prototype.selectedIndex = -1;
+jqml.ui.tabs.prototype.selectedTab = null;
+jqml.ui.tabs.prototype.selectedPanel = null;
+jqml.ui.tabs.prototype.$getTagOpen = function() {
+    return '<div xtype="jqml-tabs">';
 };
-jqml.ui.tabPanel.prototype.$getTagClose = function() {
+jqml.ui.tabs.prototype.$getTagClose = function() {
     return '</div>';
 };
-jqml.namespace.setElement('tabpanel', jqml.ui.tabPanel);
+jqml.namespace.setElement('tabs', jqml.ui.tabs);
+/**
+ * Tab
+ */
+jqml.ui.tab = function() {
+};
+jqml.ui.tab.prototype = new AMLElement;
+jqml.ui.tab.prototype.title = '';
+jqml.ui.tab.handlers = {
+    "DOMNodeInsertedIntoDocument":    function(e) {
+        var id = iif(this.attributes.id != undefined, this.attributes.id, this.uniqueID);
+        var idParent = iif(this.parentNode.attributes.id != undefined, this.parentNode.attributes.id, this.parentNode.uniqueID);
 
+        if (document.getElementById(idParent).firstChild.localName == 'div' && document.getElementById(idParent).firstChild.getAttribute('xtype') == 'jqml-tab')
+        {
+            var ul = document.createElement('ul');
+            var li = document.createElement('li');
+            li.innerHTML = '<a href="#' + id + '">' + this.attributes.title + '</a>';
+            ul.appendChild(li);
+            document.getElementById(idParent).insertBefore(ul, document.getElementById(idParent).firstChild)
+        }
+        else
+        {
+            var li = document.createElement('li');
+            li.innerHTML = '<a href="#' + id + '">' + this.attributes.title + '</a>';
+            document.getElementById(idParent).firstChild.appendChild(li);
+        }
+
+        if (this.parentNode.lastChild == this)
+        {
+            $('#' + idParent).tabs();
+        }
+    }
+};
+jqml.ui.tab.prototype.$getTagOpen = function() {
+    return '<div xtype="jqml-tab" class="tabpane">';
+};
+jqml.ui.tab.prototype.$getTagClose = function() {
+    return '</div>';
+};
+jqml.namespace.setElement('tab', jqml.ui.tab);
+
+/**
+ * Context Menu
+ */
+jqml.ui.contextmenu = function() {
+};
+jqml.ui.contextmenu.prototype = new AMLElement;
+jqml.ui.contextmenu.prototype.value = '';
+jqml.ui.contextmenu.prototype.select = function(action, el, pos) {
+};
+jqml.ui.contextmenu.prototype.$getTagOpen = function() {
+    return '<ul xtype="jqml-contextmenu">';
+};
+jqml.ui.contextmenu.prototype.$getTagClose = function() {
+    return '</ul>';
+};
+jqml.namespace.setElement('contextmenu', jqml.ui.contextmenu);
+jqml.ui.menuitem = function() {
+};
+jqml.ui.menuitem.prototype = new AMLElement;
+jqml.ui.menuitem.prototype.action = '';
+jqml.ui.menuitem.prototype.$getTagOpen = function() {
+    return '<li><a class="" href="#' + this.attributes.action + '">';
+};
+jqml.ui.menuitem.prototype.$getTagClose = function() {
+    return '</a></li>';
+};
+jqml.ui.menuitem.handlers = {
+    "DOMNodeInsertedIntoDocument":    function(e) {
+        var id = iif(this.attributes.id != undefined, this.attributes.id, this.uniqueID);
+        var idParent = iif(this.parentNode.parentNode.attributes.id != undefined, this.parentNode.parentNode.attributes.id, this.parentNode.parentNode.uniqueID);
+        if (this.parentNode.lastChild == this)
+        {
+            //function(action, el, pos)
+            $('#' + idParent).contextMenu({ menu: id });
+        }
+    }
+};
+jqml.namespace.setElement('menuitem', jqml.ui.menuitem);
+/**
+ * Accordion
+ */
+jqml.ui.accordion = function() {
+};
+jqml.ui.accordion.prototype = new AMLElement;
+jqml.ui.accordion.prototype.$getTagOpen = function() {
+    return '<ul xtype="jqml-accordion">';
+};
+jqml.ui.accordion.prototype.$getTagClose = function() {
+    return '</ul>';
+};
+jqml.namespace.setElement('accordion', jqml.ui.accordion);
+
+jqml.ui.accordionitem = function() {
+};
+jqml.ui.accordionitem.prototype = new AMLElement;
+jqml.ui.accordionitem.prototype.title = '';
+jqml.ui.accordionitem.prototype.$getTagOpen = function() {
+    return '<li><a href="#">' + this.attributes.title + '</a><div>';
+};
+jqml.ui.accordionitem.prototype.$getTagClose = function() {
+    return '</div></li>';
+};
+jqml.ui.accordionitem.handlers = {
+    "DOMNodeInsertedIntoDocument":    function(e) {
+        var id = iif(this.attributes.id != undefined, this.attributes.id, this.uniqueID);
+        var idParent = iif(this.parentNode.parentNode.attributes.id != undefined, this.parentNode.parentNode.attributes.id, this.parentNode.parentNode.uniqueID);
+        if (this.parentNode.lastChild == this)
+        {
+            $('#' + idParent).accordion();
+        }
+    }
+};
+jqml.namespace.setElement('accordionitem', jqml.ui.accordionitem);
 
 function iif(i, j, k) {
     if (i) {

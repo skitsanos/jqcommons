@@ -1,7 +1,7 @@
 /**
  * jqCommons
  * @author Skitsanos
- * @version 1.0.07092009
+ * @version 1.0.11252009
  */
 (function() {
     var initializing = false, fnTest = /xyz/.test(function() {
@@ -155,6 +155,48 @@ String.prototype.htmlEntities = function() {
 
 String.prototype.stripTags = function() {
     return this.replace(/<([^>]+)>/g, '');
+};
+
+var StringBuilder = function()
+{
+
+    var buffer = [];
+    var length = 0;
+
+    this.getLength = function()
+    {
+        return length;
+    };
+
+    this.clear = function()
+    {
+        buffer = [];
+        length = 0;
+    };
+
+    this.append = function(s)
+    {
+        if (s == null) return;
+
+        length += s.length;
+        buffer.push(s);
+    };
+
+    this.appendLine = function(s)
+    {
+        if (s == null) return;
+
+        var _s = s + "\r\n";
+
+        length += _s.length;
+        buffer.push(_s);
+    };
+
+    this.toString = function()
+    {
+        return buffer.join("");
+    };
+
 };
 
 

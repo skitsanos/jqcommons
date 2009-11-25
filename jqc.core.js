@@ -101,6 +101,16 @@ Function.prototype.inherits = function(parentClassOrObject) {
     return this;
 };
 
+String.prototype.times = function(n) {
+    var s = this, total = "";
+    while(n > 0) {
+	if (n % 2 == 1) total += s;
+	if (n == 1) break;
+	s += s;
+	n = n>>1;
+    }
+    return total;
+};
 String.prototype.reverse = function() {
     var s = "";
     var i = this.length;

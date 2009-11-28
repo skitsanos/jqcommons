@@ -1,0 +1,24 @@
+<!--
+* @author Skitsanos
+* @version 1.0
+* @date Nov 28, 2009 9:58:12 AM
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>$.urlParam test</title>
+    <meta name="author" content="Skitsanos"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="../jqc.core.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            //type in your browser something like urlparam.htm?name=Evi and you will see value returned
+            //if there is no data it will return undefined
+            $("#log").html('Name: ' + $.urlParam('name'));
+        });
+    </script>
+</head>
+<body>
+<div id="log"></div>
+</body>
+</html>

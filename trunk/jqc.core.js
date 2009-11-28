@@ -71,6 +71,17 @@ if (!jqCommons) {
     jqCommons = {};
 }
 
+
+function iif(i, j, k) {
+    if (i) {
+        return j;
+    } else {
+        return k;
+    }
+}
+function addslashes(str) {
+    return (str + '').replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
+}
 var GUID = {};
 GUID.newGuid = function()
 {
@@ -103,11 +114,11 @@ Function.prototype.inherits = function(parentClassOrObject) {
 
 String.prototype.times = function(n) {
     var s = this, total = "";
-    while(n > 0) {
-	if (n % 2 == 1) total += s;
-	if (n == 1) break;
-	s += s;
-	n = n>>1;
+    while (n > 0) {
+        if (n % 2 == 1) total += s;
+        if (n == 1) break;
+        s += s;
+        n = n >> 1;
     }
     return total;
 };
@@ -212,24 +223,24 @@ var StringBuilder = function()
 
 /****************************************************** String methods added by Ashit ***********************************/
 /*
-	Replaces first letter of the word with Uppercase and rest all with Lowercase.
-	usage: "heLLo woRLD".capitalize();
-*/
+ Replaces first letter of the word with Uppercase and rest all with Lowercase.
+ usage: "heLLo woRLD".capitalize();
+ */
 
-String.prototype.capitalize = function(){
-    return this.replace(/\w+/g, function(a){
+String.prototype.capitalize = function() {
+    return this.replace(/\w+/g, function(a) {
         return a.charAt(0).toUpperCase() + a.substr(1).toLowerCase();
     });
 };
 
 
 /*
-	Replaces multiple white spaces and tabs with single white space.
-	usage: "Hello		World.	".squeeze();
-*/
+ Replaces multiple white spaces and tabs with single white space.
+ usage: "Hello		World.	".squeeze();
+ */
 
-String.prototype.squeeze = function(){
-	return this.replace(/(\t|\s+)/gm," ");
+String.prototype.squeeze = function() {
+    return this.replace(/(\t|\s+)/gm, " ");
 };
 
 
@@ -733,152 +744,142 @@ jQuery.extend({
     }
 });
 
-function iif(i, j, k) {
-    if (i) {
-        return j;
-    } else {
-        return k;
+$.redirect = function(url) {
+    document.location.href = url;
+};
+/**
+ * Get query string parameter by key
+ * @param name <string> query string key
+ */
+$.urlParam = function(name) {
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(document.location.href);
+    if (results == null) {
+        return undefined;
     }
-}
-function addslashes(str) {
-    return (str + '').replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
-}
+    else {
+        return results[1] || 0;
+    }
+};
+$.clickableUrls = function() {
+    var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
+    this.each(function() {
+        $(this).html($(this).html().replace(regexp, '<a href="$1">$1</a>'));
+    });
+    return $(this);
+};
 
-//jQuery Commons Framework
-(function($) {
-    $.redirect = function(url) {
-        document.location.href = url;
-    };
-    $.urlParam = function(name) {
-        var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(document.location.href);
-        if (results == null) {
-            return undefined;
-        }
-        else {
-            return results[1] || 0;
-        }
-    };
-    $.clickableUrls = function() {
-        var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
-        this.each(function() {
-            $(this).html($(this).html().replace(regexp, '<a href="$1">$1</a>'));
-        });
-        return $(this);
-    };
+jQuery.fn.getRandomNumber = function() {
+    return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
+};
 
-    jQuery.fn.getRandomNumber = function() {
-        return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
-    };
+jQuery.fn.getRandomPassword = function(length) {
+    chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    pass = "";
+    for (x = 0; x < length; x++) {
+        i = Math.floor(Math.random() * 62);
+        pass += chars.charAt(i);
+    }
 
-    jQuery.fn.getRandomPassword = function(length) {
-        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        pass = "";
-        for (x = 0; x < length; x++) {
-            i = Math.floor(Math.random() * 62);
-            pass += chars.charAt(i);
-        }
+    $(this).val(pass);
+};
 
-        $(this).val(pass);
-    };
-
-    $.fn.autoClear = function() {
-        return this.each(function() {
-            $(this).focus(function() {
-                if (this.value == this.defaultValue) {
-                    this.value = "";
-                }
-            })
-                    .blur(function() {
-                if (!this.value.length) {
-                    this.value = this.defaultValue;
-                }
-            });
-        });
-    };
-
-    $.fn.dropDown = function(options) {
-
-        // build main options before element iteration
-        var opts = $.extend({}, $.fn.dropDown.defaults, options);
-
-        // iterate each matched element
-        return this.each(function() {
-            menu = $(this);
-
-            // Show the submenus on click
-            menu.children('li:has(ul)').hover(
-                    function() {
-                        $(this)
-                                .addClass(opts.active_class)
-                                .children('ul').animate(opts.show, opts.show_speed);
-                    },
-                    function() {
-                        $(this)
-                                .removeClass(opts.active_class)
-                                .children('ul').animate(opts.hide, opts.hide_speed);
-                    }
-                    ).children('ul').hide();
-        });
-    };
-
-    // Default options
-    $.fn.dropDown.defaults = {
-        show: {opacity: 'show'},     // Effect to use when showing the sub-menu
-        show_speed: 300,            // Speed of the show transition
-        hide: {opacity: 'hide'},     // Effect to use when hiding the sub-menu
-        hide_speed: 200,            // Speed of the hide transition
-        active_class: 'open'        // Class to give open menu items
-    };
-
-    $.fn.vjustify = function() {
-        var maxHeight = 0;
-        $(".resize").css("height", "auto");
-        this.each(function() {
-            if (this.offsetHeight > maxHeight) {
-                maxHeight = this.offsetHeight;
+$.fn.autoClear = function() {
+    return this.each(function() {
+        $(this).focus(function() {
+            if (this.value == this.defaultValue) {
+                this.value = "";
+            }
+        })
+                .blur(function() {
+            if (!this.value.length) {
+                this.value = this.defaultValue;
             }
         });
-        this.each(function() {
-            $(this).height(maxHeight);
-            if (this.offsetHeight > maxHeight) {
-                $(this).height((maxHeight - (this.offsetHeight - maxHeight)));
-            }
-        });
-    };
+    });
+};
 
-    $.fn.hoverClass = function(classname) {
-        return this.hover(function() {
-            $(this).addClass(classname);
-        }, function() {
-            $(this).removeClass(classname);
-        });
-    };
+$.fn.dropDown = function(options) {
 
-    $.alert = function(title, msg) {
-        var c = $('<div></div>');
-        $(document).append(c);
-        c.html(msg);
-        c.dialog({
-            autoOpen: false,
-            modal: true,
-            resizable: false,
-            buttons: { 'Close': function() {
-                $(this).dialog('close');
-                c.remove();
-            } },
-            title: title
-        });
+    // build main options before element iteration
+    var opts = $.extend({}, $.fn.dropDown.defaults, options);
 
-        c.dialog('open');
-    };
+    // iterate each matched element
+    return this.each(function() {
+        menu = $(this);
 
-    //:got
-    $.extend($.expr[':'], {
-        got: function(el, i, m) {
-            return ($(el).html() == m[3]);
+        // Show the submenus on click
+        menu.children('li:has(ul)').hover(
+                function() {
+                    $(this)
+                            .addClass(opts.active_class)
+                            .children('ul').animate(opts.show, opts.show_speed);
+                },
+                function() {
+                    $(this)
+                            .removeClass(opts.active_class)
+                            .children('ul').animate(opts.hide, opts.hide_speed);
+                }
+                ).children('ul').hide();
+    });
+};
+
+// Default options
+$.fn.dropDown.defaults = {
+    show: {opacity: 'show'},     // Effect to use when showing the sub-menu
+    show_speed: 300,            // Speed of the show transition
+    hide: {opacity: 'hide'},     // Effect to use when hiding the sub-menu
+    hide_speed: 200,            // Speed of the hide transition
+    active_class: 'open'        // Class to give open menu items
+};
+
+$.fn.vjustify = function() {
+    var maxHeight = 0;
+    $(".resize").css("height", "auto");
+    this.each(function() {
+        if (this.offsetHeight > maxHeight) {
+            maxHeight = this.offsetHeight;
         }
     });
-})(jQuery);
+    this.each(function() {
+        $(this).height(maxHeight);
+        if (this.offsetHeight > maxHeight) {
+            $(this).height((maxHeight - (this.offsetHeight - maxHeight)));
+        }
+    });
+};
+
+$.fn.hoverClass = function(classname) {
+    return this.hover(function() {
+        $(this).addClass(classname);
+    }, function() {
+        $(this).removeClass(classname);
+    });
+};
+
+$.alert = function(title, msg) {
+    var c = $('<div></div>');
+    $(document).append(c);
+    c.html(msg);
+    c.dialog({
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        buttons: { 'Close': function() {
+            $(this).dialog('close');
+            c.remove();
+        } },
+        title: title
+    });
+
+    c.dialog('open');
+};
+
+//:got
+$.extend($.expr[':'], {
+    got: function(el, i, m) {
+        return ($(el).html() == m[3]);
+    }
+});
 
 function delegate(type, delegate, handler)
 {

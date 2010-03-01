@@ -6,23 +6,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-    <title>$.clickableUrls test</title>
-    <meta name="author" content="Skitsanos.com"/>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<title>$.clickableUrls test</title>
+	<meta name="author" content="Skitsanos.com"/>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script type="text/javascript" src="../jqc.core.js"></script>
 
-    <script type="text/javascript">
-        $(function() {
-            console.log($.getRandomPassword())
-            //$('#links').clickableUrls();
-        });
-    </script>
+	<script type="text/javascript">
+		$(function() {
+			$('#links, #ipsum').clickableUrls();
+		});
+	</script>
 </head>
 <body>
-    <h3>Skitsanos Linux Distro Downloads</h3>
-   <ul id="links">
-       <li>Kodabox: http://susestudio.com/download/b48f189021774b43b6f22fc81806760d/Kodabox.i686-1.2.7.iso</li>
-       <li>RedCouch: http://susestudio.com/download/8e8136f5772de8831c7d33912907ab39/Red_Couch_x86.i686-1.2.1.iso</li>
-       <li>Chuchi: http://susestudio.com/download/dc611808d0c61efb2cc24541e5bf988f/Chuchi.x86_64-0.0.1.iso</li>
-   </ul>
+<h3>Skitsanos Linux Distro Downloads</h3>
+<ul id="links">
+	<li>Kodabox: http://susestudio.com/download/b48f189021774b43b6f22fc81806760d/Kodabox.i686-1.2.7.iso</li>
+	<li>RedCouch: http://susestudio.com/download/8e8136f5772de8831c7d33912907ab39/Red_Couch_x86.i686-1.2.1.iso</li>
+	<li>Chuchi: http://susestudio.com/download/dc611808d0c61efb2cc24541e5bf988f/Chuchi.x86_64-0.0.1.iso</li>
+</ul>
+
+<hr/>
+<div id="ipsum">
+	(http://blog.skitsanos.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus urna a turpis dictum vitae dapibus sem molestie. 
+	Curabitur semper sagittis risus, a fermentum ligula consectetur rutrum. Nam sit amet ante id sem ultrices mattis ut non lacus.
+	Nunc scelerisque nibh purus. Fusce eu lobortis purus. Proin tempor luctus dignissim. Continue reading on http://skitsanos.com
+</div>
 </body>
 </html>

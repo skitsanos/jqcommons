@@ -751,7 +751,7 @@ $.urlParam = function(name) {
 		return results[1] || 0;
 	}
 };
-$.clickableUrls = function() {
+$.fn.clickableUrls = function() {
 	console.log(this)
 	var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
 	this.each(function() {

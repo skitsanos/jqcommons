@@ -1,0 +1,31 @@
+<!--
+* @author Skitsanos
+* @version 1.0
+* @date Mar 1, 2010 12:30:26 PM
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>CSS Style Switcher</title>
+	<meta name="author" content="Skitsanos.com"/>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/blitzer/jquery-ui.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href="default.css" type="text/css">
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("a.Styleswitcher").click(function() {
+				//swicth the LINK REL attribute with the value in A REL attribute
+				$('link[rel=stylesheet]').attr('href', $(this).attr('rel'));
+			});
+		});
+
+	</script>
+</head>
+<body>
+<a href="#" class="Styleswitcher" rel="default.css">Default Theme</a>
+<a href="#" class="Styleswitcher" rel="red.css">Red Theme</a>
+<a href="#" class="Styleswitcher" rel="blue.css">Blue Theme</a>
+</body>
+</html>

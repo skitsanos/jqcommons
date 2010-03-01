@@ -76,18 +76,16 @@ function iif(i, j, k) {
 		return k;
 	}
 }
-function namespace(ns)
-{
- var nsParts = ns.split(".");
- var root = window;
+function namespace(ns) {
+	var nsParts = ns.split(".");
+	var root = window;
 
- for(var i=0; i<nsParts.length; i++)
- {
-  if(typeof root[nsParts[i]] == "undefined")
-   root[nsParts[i]] = new Object();
+	for (var i = 0; i < nsParts.length; i++) {
+		if (typeof root[nsParts[i]] == "undefined")
+			root[nsParts[i]] = new Object();
 
-  root = root[nsParts[i]];
- }
+		root = root[nsParts[i]];
+	}
 }
 
 function addslashes(str) {
@@ -118,7 +116,7 @@ Function.prototype.inherits = function(parentClassOrObject) {
 	return this;
 };
 
-String.prototype.isNumeric = function(){
+String.prototype.isNumeric = function() {
 	return !isNaN(this);
 };
 
@@ -751,8 +749,16 @@ $.urlParam = function(name) {
 		return results[1] || 0;
 	}
 };
+
+$.fn.noRightClick = function() {
+	return this.each(function() {
+		$(this).bind("contextmenu", function(e) {
+			return false;
+		});
+	});
+};
+
 $.fn.clickableUrls = function() {
-	console.log(this)
 	var regexp = /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
 	this.each(function() {
 		$(this).html($(this).html().replace(regexp, '<a href="$1">$1</a>'));
@@ -855,8 +861,7 @@ $.alert = function(title, msg, buttons) {
 		title: title
 	});
 
-	if(buttons!=null||buttons!=undefined)
-	{
+	if (buttons != null || buttons != undefined) {
 		c.dialog('option', 'buttons', buttons);
 	}
 

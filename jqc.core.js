@@ -750,6 +750,10 @@ $.urlParam = function(name) {
 	}
 };
 
+$.getRandomNumber = function() {
+	return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
+};
+
 $.fn.noRightClick = function() {
 	return this.each(function() {
 		$(this).bind("contextmenu", function(e) {
@@ -764,10 +768,6 @@ $.fn.clickableUrls = function() {
 		$(this).html($(this).html().replace(regexp, '<a href="$1">$1</a>'));
 	});
 	return $(this);
-};
-
-$.fn.getRandomNumber = function() {
-	return (Math.floor(Math.random() * (ubound - lbound)) + lbound);
 };
 
 $.fn.getRandomPassword = function(length) {
@@ -795,32 +795,17 @@ $.fn.autoClear = function() {
 	});
 };
 
-$.fn.dropDown = function(options) {
-
-	// build main options before element iteration
-	var opts = $.extend({}, $.fn.dropDown.defaults, options);
-
-	// iterate each matched element
-	return this.each(function() {
-		menu = $(this);
-
-		// Show the submenus on click
-		menu.children('li:has(ul)').hover(function() {
-			$(this).addClass(opts.active_class).children('ul').animate(opts.show, opts.show_speed);
-		}, function() {
-			$(this).removeClass(opts.active_class).children('ul').animate(opts.hide, opts.hide_speed);
-		}).children('ul').hide();
+$.fn.equalHeight = function() {
+	tallest = 0;
+	this.each(function() {
+		thisHeight = $(this).height();
+		if (thisHeight > tallest) {
+			tallest = thisHeight;
+		}
 	});
+	this.height(tallest);
 };
 
-// Default options
-$.fn.dropDown.defaults = {
-	show: {opacity: 'show'},	 // Effect to use when showing the sub-menu
-	show_speed: 300,			// Speed of the show transition
-	hide: {opacity: 'hide'},	 // Effect to use when hiding the sub-menu
-	hide_speed: 200,			// Speed of the hide transition
-	active_class: 'open'		// Class to give open menu items
-};
 
 $.fn.vjustify = function() {
 	var maxHeight = 0;

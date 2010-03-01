@@ -1,0 +1,45 @@
+<!--
+* @author Skitsanos
+* @version 1.0
+* @date Mar 1, 2010 12:33:39 PM
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>Columns of equal height</title>
+	<meta name="author" content="Skitsanos.com"/>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/blitzer/jquery-ui.css" type="text/css" media="screen"/>
+
+	<script type="text/javascript" src="../jqc.core.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+		  $('#left, #right').equalHeight();
+		});
+	</script>
+
+	<style type="text/css">
+		body {font-family: Arial, sans-serif; font-size: 11px;}
+		#left, #right {border: dotted 1px #ff9900; background-color: #fafafa; width: 200px; float: left; margin: 10px; padding: 7px;}
+	</style>
+</head>
+<body>
+    <div id="content">
+		<div id="left">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam et massa in arcu hendrerit scelerisque non
+			eget magna. Vivamus dictum dapibus risus, ac vehicula felis vehicula at. Donec in pulvinar nulla. Maecenas
+			nec arcu eu nisl molestie faucibus ac eget orci. Aenean ultricies fringilla leo id euismod. Quisque est diam.
+		</div>
+
+		<div id="right">
+			 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer hendrerit fringilla faucibus. Proin
+			luctus ultrices nibh, in viverra ante faucibus ultrices. Aliquam erat volutpat. Aenean condimentum nisi sed
+			augue suscipit iaculis. Integer quis massa tellus. Sed a arcu dolor, id hendrerit nulla. Proin a quam ut
+			sem varius posuere. Fusce ultricies, lacus non pulvinar semper, libero ligula congue ipsum, ac elementum
+			quam lacus eu mi. Vivamus malesuada vehicula erat id.
+		</div>
+    </div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 /**
  * jqCommons
  * @author Skitsanos
- * @version 1.0.11252009
+ * @version 1.1.03012010
  */
 (function() {
 	var initializing = false, fnTest = /xyz/.test(function() {

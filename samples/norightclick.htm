@@ -1,0 +1,28 @@
+<!--
+* @author Skitsanos
+* @version 1.0
+* @date Mar 1, 2010 12:21:55 PM
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>No Right Click (Disable Context Menu)</title>
+	<meta name="author" content="Skitsanos.com"/>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/blitzer/jquery-ui.css" type="text/css" media="screen"/>
+	<script type="text/javascript" src="../jqc.core.js"></script>
+	<script type="text/javascript">
+		$(function() {
+		   $('#ipsum').noRightClick();
+		});
+	</script>
+</head>
+<body>
+<div id="ipsum">
+	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus urna a turpis dictum vitae dapibus sem molestie.
+	Curabitur semper sagittis risus, a fermentum ligula consectetur rutrum. Nam sit amet ante id sem ultrices mattis ut non lacus.
+	Nunc scelerisque nibh purus. Fusce eu lobortis purus. Proin tempor luctus dignissim.
+</div>
+</body>
+</html>

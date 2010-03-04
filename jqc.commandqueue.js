@@ -15,17 +15,16 @@ jqCommons.queues = {
 		COMPLETE : 'commandqueue.events.complete',
 		ERROR: 'commandqueue.events.error',
 		PROGRESS: 'commandqueue.events.progress'
-	},
-
-	ICommand: function () {
-		this.toString = function() {
-			return 'jqCommons.queues.task';
-		};
-		this.execute = function() {
-		};
 	}
 };
 
+jqCommons.queues.ICommand = Class.extend({
+	toString:  function() {
+		return 'jqCommons.queues.task';
+	},
+	execute: function() {
+	}
+});
 
 jqCommons.queues.AbstractCommand = jqCommons.queues.ICommand.extend({
 	label:'',

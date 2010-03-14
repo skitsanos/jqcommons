@@ -1,0 +1,11 @@
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:jqml="http://www.skitsanos.com/ns/jqml">
+	<script type="text/javascript">
+		var messages = {
+			hi: 'hi there'
+		};
+	</script>
+
+	<jqml:label key="messages.hi">hi</jqml:label>
+	<hr/>
+	<button id="btnExec">Exec()</button>
+</div>

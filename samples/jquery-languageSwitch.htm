@@ -7,22 +7,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 	<title>Language Switch demo</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="author" content="Skitsanos.com"/>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/blitzer/jquery-ui.css" type="text/css" media="screen"/>
+	<style type="text/css">
+		body {font-family: Arial, sans-serif; font-size: 11px;}
+		.fieldname {width: 120px;}
+	</style>
+
 	<script type="text/javascript">
 		var app = {
 			events: {
 				CHANGE_LANGUAGE: 'jQueryChangeLanguageEvent'
-			}
-		};
+			},
 
-		var Messages = {
-			OK: 'OK',
-			CANCEL: 'Cancel',
-			YES: 'Yes',
-			NO: 'No'
+			Messages:  {
+				OK: 'OK',
+				CANCEL: 'Cancel',
+				YES: 'Yes',
+				NO: 'No',
+				NAME: 'Name'
+			},
+			Messages_gr: {
+				OK: "εντάξει",
+				CANCEL: "ακυρώσει",
+				YES: "ναι",
+				NO: "οχι",
+				NAME:'Όνομα'
+			}
 		};
 
 		$(function() {
@@ -34,14 +48,9 @@
 			});
 
 			$(document).bind(app.events.CHANGE_LANGUAGE, function(e) {
-				//load language file
-				$.getJSON('messages.' + e.language + '.js', function(data) {
-					console.log(data);
-
-					/*
-					$('*[key]').each(function(ndx) {
-										});
-					*/
+				app.Messages = app["Messages_" + e.language];
+				$('*[key]').each(function(ndx) {
+					$(this).html(eval('app.' + $(this).attr('key')));
 				});
 			});
 		});
@@ -49,7 +58,14 @@
 </head>
 <body>
 <div>
-	<span key="Messages.OK">OK</span>
+	<table>
+		<tr>
+			<td key="Messages.NAME">Name:</td>
+			<td><input type="text" /></td>
+		</tr>
+	</table>
+	<a key="Messages.YES" href="#">OK</a> | <a key="Messages.NO" href="#">Cancel</a>
+	<hr/>
 	<button id="btnExec">Exec()</button>
 </div>
 

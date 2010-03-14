@@ -1,0 +1,42 @@
+<!--
+* @author Skitsanos
+* @version 1.0
+* @date Mar 13, 2010 11:54:33 PM
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:jqml="http://www.skitsanos.com/ns/jqml">
+<head>
+	<title></title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<!-- (A) Ample SDK runtime and UI language -->
+	<script type="text/javascript" src="../ample-0.9.0/ample/runtime.js"></script>
+	<script type="text/javascript" src="../ample-0.9.0/ample/languages/xhtml/xhtml.js"></script>
+
+	<script type="text/javascript" src="../jqml.js"></script>
+
+	<script type="text/javascript">
+		$(function(){
+			$('#btnExec').live('click', function() {
+				console.log('running translate test');
+				//$(document).trigger(jqml.events.CHANGE_LANGUAGE);
+				jqml.events.dispatch(jqml.events.CHANGE_LANGUAGE);
+			});
+		});
+
+	</script>
+
+	<!-- (1) Styling -->
+	<style type="text/ample+css">
+		@namespace "http://www.w3.org/1999/xhtml";
+		b {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+<!-- (3) Layout -->
+<script type="application/ample+xml" src="jqml-languages.xml">
+</script>
+</body>
+</html>

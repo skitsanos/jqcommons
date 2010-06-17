@@ -737,6 +737,69 @@ jQuery.extend({
 $.getId = function() {
 	return new Date().getTime().toString().substr(8);
 };
+$.datetime = {
+	today: function() {
+		return new Date();
+	},
+	compare: function(date1, date2) {
+		var date1Timestamp = date1.getTime();
+		var date2Timestamp = date2.getTime();
+
+		var result = -1;
+
+		if (date1Timestamp == date2Timestamp) {
+			result = 0;
+		} else if (date1Timestamp > date2Timestamp) {
+			result = 1;
+		}
+
+		return result;
+	},
+	addSeconds: function(date, secs) {
+		var mSecs = secs * 1000;
+		var sum = mSecs + date.getTime();
+		return new Date(sum);
+	},
+	addMinutes: function(date, mins) {
+		return this.addSeconds(date, mins * 60);
+	},
+	addHours: function(date, hrs) {
+		return this.addMinutes(date, hrs * 60);
+	},
+	addDays: function(date, days) {
+		return this.addHours(date, days * 24);
+	},
+	addWeeks: function(date, weeks) {
+		return this.addDays(date, weeks * 7);
+	}
+};
+
+$.io = {
+	path: {
+		getFileName: function(path)
+		{
+			if (!path.startsWith('/'))
+			{
+				path = "/" + path;
+			}
+			var reg = /(.*?\\.(\\w+))/;
+			var obj = reg.exec(path);
+			return obj[1];
+		},
+		getFileNameWithoutExtension:function(path)
+		{
+			var reg = /(.*)[\/\\]([^\/\\]+)\.\w+$/;
+			var obj = reg.exec(path);
+			return obj[2];
+		},
+		getFileExtension:function(path)
+		{
+			var reg = /(.*?)(\.[^.]*$|$)/;
+			var obj = reg.exec(path);
+			return obj[2];
+		}
+	}
+};
 $.redirect = function(url) {
 	document.location.href = url;
 };
@@ -782,37 +845,6 @@ $.fn.getRandomPassword = function(length) {
 	}
 
 	$(this).val(pass);
-};
-
-$.fn.sortableColumn = function(options) {
-	if (options != undefined) {
-		this.each(function() {
-			var _urlParam = iif(options.urlParam != undefined, options.urlParam, 'sort');
-			var _sortDir = iif($.urlParam('dir') == undefined, 'asc', $.urlParam('dir'));
-			var _sortBy = iif(options.sortBy == undefined, 'id', options.sortBy);
-
-			var _img = $('<img ' + iif(options.iconStyle != undefined, ' style="' + options.iconStyle + '"', '') + ' src="' + iif(_sortDir === 'asc', options.sortIconDesc, options.sortIconAsc) + '" />');
-			if ($.urlParam(_urlParam) !== _sortBy) {
-				_img = $('<img ' + iif(options.iconStyle != undefined, ' style="' + options.iconStyle + '"', '') + ' src="' + options.sortIconDesc + '" />');
-			}
-			_img.css({cursor: 'pointer'});
-			$(this).append(_img);
-
-			_img.click(function() {
-				if (document.location.href.indexOf('?') > 0) {
-					var _queryString = ('?' + document.location.href.split('?')[1]).replace(new RegExp('[\\?&]' + _urlParam + '=([^&#]*)'), '');
-					_queryString = _queryString.replace(new RegExp('[\\?&]dir=([^&#]*)'), '');
-					if (_queryString.startsWith('&')) {
-						_queryString = _queryString.replace('&', '');
-					}
-					if (_queryString.startsWith('?')) {
-						_queryString = _queryString.replace('?', '');
-					}
-				}
-				$.redirect(options.url + '?' + _urlParam + '=' + _sortBy + '&dir=' + iif(_sortDir == 'asc', 'desc', 'asc') + iif(_queryString != '', '&' + _queryString, ''));
-			});
-		});
-	}
 };
 
 $.fn.autoClear = function() {
@@ -893,6 +925,7 @@ $.extend($.expr[':'], {
 		return ($(el).html() == m[3]);
 	}
 });
+
 
 function delegate(type, delegate, handler) {
 	return $(document).bind(type, function(event) {

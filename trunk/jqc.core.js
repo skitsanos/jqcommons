@@ -782,21 +782,21 @@ $.io = {
 			{
 				path = "/" + path;
 			}
-			var reg = /(.*?\\.(\\w+))/;
+			var reg = /\/([^\/]+)$/;
 			var obj = reg.exec(path);
 			return obj[1];
 		},
 		getFileNameWithoutExtension:function(path)
 		{
-			var reg = /(.*)[\/\\]([^\/\\]+)\.\w+$/;
+			var reg = /\/([^\/]+)\.[^\.]+$/;
 			var obj = reg.exec(path);
-			return obj[2];
+			return obj[1];
 		},
 		getFileExtension:function(path)
 		{
-			var reg = /(.*?)(\.[^.]*$|$)/;
+			var reg = /\.([^\.]+)$/;;
 			var obj = reg.exec(path);
-			return obj[2];
+			return obj[1];
 		}
 	}
 };

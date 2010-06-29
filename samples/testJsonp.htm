@@ -9,11 +9,10 @@
 	<title>Test JSONP</title>
 	<meta name="author" content="Skitsanos.com"/>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/blitzer/jquery-ui.css" type="text/css" media="screen"/>
 	<script type="text/javascript">
 		$(function() {
 			$.getJSON("http://labs.skitsanos.com/demos/ningVzaarSample/vzaarGetVideos.php?callback=?", function(data) {
+				console.log(data);
 				$('#status').html('....');
 			});
 		});

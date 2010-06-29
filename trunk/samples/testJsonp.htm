@@ -1,0 +1,25 @@
+<!--
+* @author Skitsanos
+* @version 1.0
+* @date Jun 29, 2010 11:23:18 PM
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<title>Test JSONP</title>
+	<meta name="author" content="Skitsanos.com"/>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/blitzer/jquery-ui.css" type="text/css" media="screen"/>
+	<script type="text/javascript">
+		$(function() {
+			$.getJSON("http://labs.skitsanos.com/demos/ningVzaarSample/vzaarGetVideos.php?callback=?", function(data) {
+				$('#status').html('....');
+			});
+		});
+	</script>
+</head>
+<body>
+<div id="status"></div>
+</body>
+</html>

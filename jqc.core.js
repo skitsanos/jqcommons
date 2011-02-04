@@ -77,6 +77,11 @@ Function.prototype.inherits = function(parentClassOrObject)
 	return this;
 };
 
+Object.prototype.getType = function(){
+   if(this===null)return "[object Null]";
+   return Object.prototype.toString.call(this);
+};
+
 String.prototype.isNumeric = function()
 {
 	return !isNaN(this);
